@@ -21,11 +21,13 @@ RUN apt-get update -y && \
 		/var/tmp/*
 
 COPY /rootfs /
+ENV QBIT_PORT=16840
+
 ENV S6_CMD_WAIT_FOR_SERVICES=1 \
     HOME="/config" \
     XDG_CONFIG_HOME="/config" \
-    XDG_DATA_HOME="/config" \
+    XDG_DATA_HOME="/downloads" \
     POST_CONNECT="qbittorrent-nox -d --webui-port=8080"
 
-EXPOSE 16840 16840/udp 8080 
+EXPOSE $QBIT_PORT $QBIT_PORT/udp 8080 
 CMD nord_login && nord_config && nord_connect && nord_watch
