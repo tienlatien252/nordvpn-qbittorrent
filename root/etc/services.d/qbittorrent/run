@@ -1,0 +1,33 @@
+#!/usr/bin/with-contenv sh
+# shellcheck shell=sh
+export QBT_PROFILE=${CONFIG_DIR}
+
+# wait for VPN connection
+until ifconfig | grep tun | grep -q "00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00"; do
+    sleep 0.5
+done
+
+for rule in "OUTPUT -p udp -d ${DNS} --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT" "INPUT -p udp -s ${DNS} --sport 53 -m state --state ESTABLISHED -j ACCEPT" "OUTPUT -p tcp -d ${DNS} --dport 53 -m state --state NEW,ESTABLISHED -j ACCEPT" "INPUT -p tcp -s ${DNS} --sport 53 -m state --state ESTABLISHED -j ACCEPT"; do
+    # drop rule if it exists
+    if iptables -C "${rule}" >/dev/null 2>&1; then
+        echo "dropping IPtables rule: ${rule}"
+        iptables -D "${rule}"
+    fi
+done
+
+if [ "${OPENVPN_PROVIDER}" = "PIA" ]; then
+    echo "INFO: configuring port forwarding for ${OPENVPN_PROVIDER}"
+    /usr/sbin/pia_port.sh
+# not currently implemented
+# elif [ "${OPENVPN_PROVIDER}" = "PERFECTPRIVACY" ]; then
+#     echo "CONFIGURING PORT FORWARDING"
+#     exec /etc/transmission/updatePPPort.sh ${TRANSMISSION_BIND_ADDRESS_IPV4} &
+elif [ "${OPENVPN_PROVIDER}" = "PRIVATEVPN" ]; then
+    echo "INFO: configuring port forwarding for ${OPENVPN_PROVIDER}"
+    /usr/sbin/private_vpn_port.sh
+else
+    echo "INFO: no port updater for provider ${OPENVPN_PROVIDER}"
+fi
+
+umask "${UMASK_SET:-002}"
+exec s6-setuidgid "${PUID}:${PGID}" qbittorrent-nox

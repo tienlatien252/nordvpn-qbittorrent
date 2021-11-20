@@ -43,6 +43,9 @@ ENV TECHNOLOGY=openvpn_udp \
     RANDOM_TOP=0 \
     CHECK_CONNECTION_ATTEMPTS=5 \
     CHECK_CONNECTION_ATTEMPT_INTERVAL=10
+    CONFIG_DIR=/config \
+    QBT_SAVE_PATH=/downloads \
+    QBT_WEBUI_PORT=8080 \
 
 RUN echo "**** upgrade packages ****" && \
     apk --no-cache --no-progress add openssl=1.1.1l-r0 && \
@@ -62,5 +65,7 @@ RUN echo "**** upgrade packages ****" && \
     rm -rf /var/cache/apk/*
 
 COPY --from=rootfs-builder /rootfs/ /
+
+EXPOSE 8080
 
 ENTRYPOINT ["/init"]
