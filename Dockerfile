@@ -23,5 +23,6 @@ RUN apt-get update -y && \
 COPY /rootfs /
 ENV S6_CMD_WAIT_FOR_SERVICES=1
 EXPOSE 8080
+RUN chmod +x /usr/bin/qbitinit
 ENTRYPOINT ["/usr/bin/qbitinit"]
 CMD nord_login && nord_config && nord_connect && nord_watch 
