@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "y" | qbittorrent-nox --webui-port=8080
