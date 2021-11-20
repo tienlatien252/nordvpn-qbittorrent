@@ -45,7 +45,12 @@ ENV TECHNOLOGY=openvpn_udp \
     CHECK_CONNECTION_ATTEMPT_INTERVAL=10 \
     CONFIG_DIR=/config \
     QBT_SAVE_PATH=/downloads \
-    QBT_WEBUI_PORT=56419
+    QBT_WEBUI_PORT=8080
+    TUN=/dev/net/tun \
+    LAN=192.168.1.0/24 \
+    DNS=1.1.1.1 \
+    PUID=1000 \
+    PGID=1000
 
 RUN echo "**** upgrade packages ****" && \
     apk --no-cache --no-progress add openssl=1.1.1l-r0 && \
