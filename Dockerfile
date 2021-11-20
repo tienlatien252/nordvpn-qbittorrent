@@ -22,4 +22,5 @@ RUN apt-get update -y && \
 
 COPY /rootfs /
 ENV S6_CMD_WAIT_FOR_SERVICES=1
+EXPOSE 8080
 CMD nord_login && nord_config && nord_connect && nord_watch && echo "y" | qbittorrent-nox --webui-port=8080
