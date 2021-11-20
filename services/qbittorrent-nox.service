@@ -3,7 +3,7 @@ Description=qBittorrent client
 After=network.target
  
 [Service]
-ExecStart=/usr/bin/qbittorrent-nox --webui-port=8080
+ExecStart=/usr/bin/qbittorrent-nox --webui-port=9999
 Restart=always
  
 [Install]
